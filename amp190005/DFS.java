@@ -106,7 +106,7 @@ public class DFS extends GraphAlgorithm<DFS.DFSVertex> {
 				for (Integer i: reachabiList) {
 					System.out.print(i + " ");
 				}
-				System.out.println();
+				System.bout.println();
 				System.out.println("Reachability of " + v.getName() + " in reverse");
 				for (Integer i: reachabiListReverse) {
 					System.out.print(i + " ");
