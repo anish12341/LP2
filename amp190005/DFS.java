@@ -21,11 +21,12 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 public class DFS extends GraphAlgorithm<DFS.DFSVertex> {
-	List<Vertex> topPostOrder;
-    
+	List<Set<Vertex>> strongComponents;
+	
     public static class DFSVertex implements Factory{
 		int state;   //0-new, 1-active or 2-finished
-		
+		boolean inComponent = false;
+
 		public DFSVertex(Vertex u) {
 			state = 0;
 		}
@@ -34,52 +35,30 @@ public class DFS extends GraphAlgorithm<DFS.DFSVertex> {
 
     public DFS(Graph g) {
     	super(g, new DFSVertex(null));
-    	// time = 0;
-    	topPostOrder = new ArrayList<Vertex>();
+		strongComponents = new ArrayList<Set<Vertex>>();
     }
     
     
-    public boolean dfs(Vertex src, List<Integer> reachabilityList) {
+    public boolean dfs(Vertex src, List<Vertex> reachabilityList, Iterable<Edge> edgesToUse, boolean isReverse) {
 		this.store.get(src).state = 1;
     	
-    	for(Graph.Edge e: g.outEdges(src)){
+		for(Graph.Edge e: edgesToUse){
     		Vertex v = e.otherEnd(src);
-    		if(this.store.get(v).state==1) { // Cycle found in the graph
-    			return false;
-    		}
     		if(this.store.get(v).state==0) {
-				reachabilityList.add(v.getName());
-    			if(!dfs(v, reachabilityList))
+				reachabilityList.add(v);
+				if (isReverse) {
+					if(!dfs(v, reachabilityList, g.inEdges(v), true))
     				return false;
+				} else {
+					if(!dfs(v, reachabilityList, g.outEdges(v), false))
+    				return false;
+				}
     		}
     	} 
     	
     	this.store.get(src).state = 2;
-    	// this.topPostOrder.add(src);
     	return true;
 	}
-	
-	public boolean dfsReverse(Vertex src, List<Integer> reachabilityList) {
-		this.store.get(src).state = 1;
-    	
-    	for(Graph.Edge e: g.inEdges(src)){
-			Vertex v = e.otherEnd(src);
-			// System.out.println("The other end: "+ v.getName() + " from source: " + src.getName());
-    		if(this.store.get(v).state==1) { // Cycle found in the graph
-    			return false;
-    		}
-    		if(this.store.get(v).state==0) {
-				// System.out.println("The other end 2nd: "+ v.getName() + " from source: " + src.getName());
-				reachabilityList.add(v.getName());
-    			if(!dfsReverse(v, reachabilityList))
-    				return false;
-    		}
-    	} 
-    	
-    	this.store.get(src).state = 2;
-    	// this.topPostOrder.add(src);
-    	return true;
-    }
 
     public boolean dfsAll(Graph g) {
     	if (!g.isDirected()) {
@@ -92,43 +71,51 @@ public class DFS extends GraphAlgorithm<DFS.DFSVertex> {
 		}	
     	
 		for(Vertex v:vertexes) {
-			// if (store.get(v).state==0) {
+			if (!store.get(v).inComponent) {
 				makeAllZero(g);
-				List<Integer> reachabiList = new LinkedList<>();
-				List<Integer> reachabiListReverse = new LinkedList<>();
+				List<Vertex> reachabiList = new LinkedList<>();
+				List<Vertex> reachabiListReverse = new LinkedList<>();
 
-				if(!dfs(v, reachabiList))
+				if(!dfs(v, reachabiList, g.outEdges(v), false))
 					return false;
 				makeAllZero(g);
-				if(!dfsReverse(v, reachabiListReverse))
+				if(!dfs(v, reachabiListReverse, g.inEdges(v), true))
 					return false;
 				System.out.println("Reachability of " + v.getName());
-				for (Integer i: reachabiList) {
-					System.out.print(i + " ");
+				for (Vertex i: reachabiList) {
+					System.out.print(i.getName() + " ");
 				}
 				System.out.println();
 				System.out.println("Reachability of " + v.getName() + " in reverse");
-				for (Integer i: reachabiListReverse) {
-					System.out.print(i + " ");
+				for (Vertex i: reachabiListReverse) {
+					System.out.print(i.getName() + " ");
 				}
 				System.out.println();
-				Set<Integer> reachableHashSet = convertToSet(reachabiList);
-				Set<Integer> reachableReverseHashSet = convertToSet(reachabiListReverse);
-				reachableHashSet.retainAll(reachabiListReverse);
-
+				Set<Vertex> reachableHashSet = convertToSet(reachabiList);
+				Set<Vertex> reachableReverseHashSet = convertToSet(reachabiListReverse);
+				reachableHashSet.retainAll(reachableReverseHashSet);
 				System.out.println("Common components of " + v.getName());
-				for (Integer setCon : reachableHashSet) {
-					System.out.print(setCon + " ");
-				}
-				System.out.println();
-			// }
+				putInComp(reachableHashSet);
+				// if (reachableHashSet.size() == 0) {
+				reachableHashSet.add(v);
+				
+				strongComponents.add(reachableHashSet);
+			}
 		}	
 		
 		return true;
 	}
+
+	public void putInComp(Set<Vertex> vertexSet) {
+		for (Vertex setCon : vertexSet) {
+			System.out.print(setCon.getName() + " ");
+			store.get(setCon).inComponent = true;
+		}
+		System.out.println();
+	}
 	
-	public HashSet<Integer> convertToSet(List<Integer> list) {
-		return new HashSet<Integer>(list);
+	public HashSet<Vertex> convertToSet(List<Vertex> list) {
+		return new HashSet<Vertex>(list);
 	}
 
 	public void makeAllZero(Graph g) {
@@ -138,19 +125,20 @@ public class DFS extends GraphAlgorithm<DFS.DFSVertex> {
 	}
    
     
-    public static List<Vertex> topologicalOrder1(Graph g) {
+    public static List<Set<Vertex>> getStrongComponents(Graph g) {
     	DFS d = new DFS(g);
     	if(!d.dfsAll(g)) {
     		System.out.println();
     		System.out.println("Given graph is not a Directed Acyclic Graph. Topological ordering is not possible.");
     		return null;
     	}
-    	return d.topPostOrder;
+    	return d.strongComponents;
     }
 
 
     public static void main(String[] args) throws Exception {
-		String string = "6 6   5 6 2   4 6 3   2 3 5   3 1 4   5 2 1   4 1 1";
+		// String string = "16 24   1 2 1   2 6 1   3 8 1   4 3 1   8 4 1   8 12 1   7 3 1   7 11 1   7 1 1   6 7 1   6 12 1   5 6 1   5 9 1   9 14 1   10 11 1   10 13 1   11 8 1   11 12 1   12 15 1   12 16 1   13 9 1   14 10 1   14 15 1   15 11 1";
+		String string = "6 13   1 2 1   1 3 1   2 1 1   2 3 1   3 2 1   3 1 1   3 4 1   4 5 1  4 6 1   5 4 1   5 6 1   6 4 1   3 5 1";
 		Scanner in;
 		// If there is a command line argument, use it as file from which
 		// input is read, otherwise use input from string.
@@ -160,17 +148,15 @@ public class DFS extends GraphAlgorithm<DFS.DFSVertex> {
 	    Graph g = Graph.readGraph(in, true);
 		g.printGraph(false);
 		
-		//topological sort
-		List<Vertex> topOrderSort = topologicalOrder1(g);
+		//Get all strong components
+		List<Set<Vertex>> strongComponents = getStrongComponents(g);
 		
-		//display topological order
-		if(topOrderSort!=null) {
-			System.out.println();
-			System.out.println("Topological Order:");
-			for (int i = topOrderSort.size()-1; i>=0; i--) {
-				System.out.print(" "+topOrderSort.get(i).getName());
+		for(Set<Vertex> s: strongComponents) {
+			System.out.println("New component:");
+			for (Vertex v: s) {
+				System.out.print(v.getName() + " ");
 			}
 			System.out.println();
-		}	
+		}
     }
 }
