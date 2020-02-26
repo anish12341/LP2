@@ -21,78 +21,74 @@ public class Graph implements Iterable<Graph.Vertex> {
     /**
      * Nested class to represent a vertex of a graph
      */
+	public class Vertex {
+		int name; // name of the vertex
 
-    public class Vertex {
-	int name; // name of the vertex
+		/**
+		 * Constructor for vertex
+		 * @param n : int - name of the vertex
+		 */
+		public Vertex(int n) {
+			name = n;
+		}
 
-	/**
-	 * Constructor for vertex
-	 * 
-	 * @param n
-	 *            : int - name of the vertex
-	 */
-	public Vertex(int n) {
-	    name = n;
-	}
+		/**
+		 * Constructor for vertex, to be used in applications that need to extend vertex
+		 * @param u	: Vertex - the vertex to be cloned
+		 */
+		public Vertex(Vertex u) {
+			name = u.name;
+		}
 
-	/**
-	 * Constructor for vertex, to be used in applications that need to extend vertex
-	 * @param u	: Vertex - the vertex to be cloned
-	 */
-	public Vertex(Vertex u) {
-	    name = u.name;
-	}
+		/** Number of outgoing edges from the vertex.
+		 */
+		public int outDegree() {
+			return adj(this).outEdges.size();
+		}
 
-	/** Number of outgoing edges from the vertex.
-	 */
-	public int outDegree() {
-	    return adj(this).outEdges.size();
-	}
-	
-	/** Number of incoming edges from the vertex.
-	 */
-	public int inDegree() {
-	    return adj(this).inEdges.size();
-	}
-	
-	/**
-	 * Method to get name of a vertex.
-	 *
-	 */
-	public int getName() {
-	    return name;
-	}
+		/** Number of incoming edges from the vertex.
+		 */
+		public int inDegree() {
+			return adj(this).inEdges.size();
+		}
 
-	/* Index i stores vertex with name i+1 */
-	public int getIndex() {
-	    return name - 1;
-	}
+		/**
+		 * Method to get name of a vertex.
+		 */
+		public int getName() {
+			return name;
+		}
 
-	/**
-	 * hashCode of a vertex can be its name, since name is unique
-	 */
-	public int hashCode() {
-	    return name;
-	}
+		/* Index i stores vertex with name i+1 */
+		public int getIndex() {
+			return name - 1;
+		}
 
-	/** name of vertex is unique, so use that to implement equals
-	 */
-	@Override
-	public boolean equals(Object other) {
-	    Vertex otherVertex = (Vertex) other;
-	    if(otherVertex == null) {
-		return false;
-	    }
-	    return this.name == otherVertex.name;
-	}
+		/**
+		 * hashCode of a vertex can be its name, since name is unique
+		 */
+		public int hashCode() {
+			return name;
+		}
 
-	
-	/**
-	 * Method to get vertex name
-	 */
-	public String toString() {
-	    return Integer.toString(name);
-	}
+		/** name of vertex is unique, so use that to implement equals
+		 */
+		@Override
+		public boolean equals(Object other) {
+			Vertex otherVertex = (Vertex) other;
+			if(otherVertex == null) {
+			return false;
+			}
+			return this.name == otherVertex.name;
+		}
+
+
+		/**
+		 * Method to get vertex name
+		 */
+		public String toString() {
+			return Integer.toString(name);
+		}
     }
 
     /**
@@ -151,13 +147,10 @@ public class Graph implements Iterable<Graph.Vertex> {
 	}
 
 	/**
-	 * Method to find the other end end of an edge, given a vertex reference
+	 * Method to find the other end of an edge, given a vertex reference
 	 * This method is used for undirected graphs
-	 * 
-	 * @param u
-	 *            : Vertex
-	 * @return
-	              : Vertex - other end of edge
+	 * @param u: Vertex
+	 * @return: Vertex - other end of edge
 	*/
 	public Vertex otherEnd(Vertex u) {
 	    assert from.equals(u) || to.equals(u);
@@ -207,9 +200,7 @@ public class Graph implements Iterable<Graph.Vertex> {
 
     /**
      * Constructor for Graph
-     * 
-     * @param n
-     *            : int - number of vertices
+     * @param n: int - number of vertices
      */    
     public Graph(int n) {
 	directed = false;  // default is undirected graph
