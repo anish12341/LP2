@@ -29,11 +29,12 @@ public class Euler extends GraphAlgorithm<Euler.EulerVertex> {
 	        
 
         EulerVertex(Vertex u) {
-	    
-        }
-	public EulerVertex make(Vertex u) { return new EulerVertex(u); }
 
-    }
+        }
+
+        public EulerVertex make(Vertex u) { return new EulerVertex(u); }
+
+        }
 
     // To do: function to find an Euler tour
 	public Euler(Graph g, Vertex start) {
