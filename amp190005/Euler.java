@@ -37,10 +37,9 @@ public class Euler extends GraphAlgorithm<Euler.EulerVertex> {
 
     // To do: function to find an Euler tour
 	public Euler(Graph g, Vertex start) {
-	super(g, new EulerVertex(null));
-	this.start = start;
-	
-	tour = new LinkedList<>();
+        super(g, new EulerVertex(null));
+        this.start = start;
+        tour = new LinkedList<>();
     }
 
     /* To do: test if the graph is Eulerian.
@@ -55,9 +54,9 @@ public class Euler extends GraphAlgorithm<Euler.EulerVertex> {
 
 
     public List<Vertex> findEulerTour() {
-	if(!isEulerian()) { return new LinkedList<Edge>(); }
-       // Graph is Eulerian...find the tour and return tour
-	return tour;
+        if(!isEulerian()) { return new LinkedList<Edge>(); }
+           // Graph is Eulerian...find the tour and return tour
+        return tour;
     }
     
     public static void main(String[] args) throws Exception {
