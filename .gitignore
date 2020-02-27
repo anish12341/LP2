@@ -1,1 +1,4 @@
 /amp190005/*.class
+*.iml
+*.class
+.idea
