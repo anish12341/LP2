@@ -39,26 +39,21 @@ public class DFS extends GraphAlgorithm<DFS.DFSVertex> {
     }
     
     
-    public boolean dfs(Vertex src, List<Vertex> reachabilityList, Iterable<Edge> edgesToUse, boolean isReverse) {
+	public boolean dfs(Vertex src, List<Vertex> reachabilityList) {
 		this.store.get(src).state = 1;
     	
-		for(Graph.Edge e: edgesToUse){
+    	for(Graph.Edge e: g.outEdges(src)){
     		Vertex v = e.otherEnd(src);
     		if(this.store.get(v).state==0) {
 				reachabilityList.add(v);
-				if (isReverse) {
-					if(!dfs(v, reachabilityList, g.inEdges(v), true))
+    			if(!dfs(v, reachabilityList))
     				return false;
-				} else {
-					if(!dfs(v, reachabilityList, g.outEdges(v), false))
-    				return false;
-				}
     		}
     	} 
     	
     	this.store.get(src).state = 2;
     	return true;
-	}
+    }
 
     public boolean dfsAll(Graph g) {
     	if (!g.isDirected()) {
@@ -76,17 +71,19 @@ public class DFS extends GraphAlgorithm<DFS.DFSVertex> {
 				List<Vertex> reachabiList = new LinkedList<>();
 				List<Vertex> reachabiListReverse = new LinkedList<>();
 
-				if(!dfs(v, reachabiList, g.outEdges(v), false))
+				if (!dfs(v, reachabiList))
 					return false;
 				makeAllZero(g);
-				if(!dfs(v, reachabiListReverse, g.inEdges(v), true))
+				g.reverseGraph();
+
+				if(!dfs(v, reachabiListReverse))
 					return false;
 				System.out.println("Reachability of " + v.getName());
 				for (Vertex i: reachabiList) {
 					System.out.print(i.getName() + " ");
 				}
 				System.out.println();
-				System.out.println("Reachability of " + v.getName() + " in reverse");
+				System.out.println("Reachability sdh of " + v.getName() + " in reverse");
 				for (Vertex i: reachabiListReverse) {
 					System.out.print(i.getName() + " ");
 				}
@@ -100,6 +97,7 @@ public class DFS extends GraphAlgorithm<DFS.DFSVertex> {
 				reachableHashSet.add(v);
 				
 				strongComponents.add(reachableHashSet);
+				g.reverseGraph();
 			}
 		}	
 		
@@ -138,7 +136,8 @@ public class DFS extends GraphAlgorithm<DFS.DFSVertex> {
 
     public static void main(String[] args) throws Exception {
 		// String string = "16 24   1 2 1   2 6 1   3 8 1   4 3 1   8 4 1   8 12 1   7 3 1   7 11 1   7 1 1   6 7 1   6 12 1   5 6 1   5 9 1   9 14 1   10 11 1   10 13 1   11 8 1   11 12 1   12 15 1   12 16 1   13 9 1   14 10 1   14 15 1   15 11 1";
-		String string = "6 13   1 2 1   1 3 1   2 1 1   2 3 1   3 2 1   3 1 1   3 4 1   4 5 1  4 6 1   5 4 1   5 6 1   6 4 1   3 5 1";
+		// String string = "6 13   1 2 1   1 3 1   2 1 1   2 3 1   3 2 1   3 1 1   3 4 1   4 5 1  4 6 1   5 4 1   5 6 1   6 4 1   3 5 1";
+		String string = "8 12   1 2 1   2 6 1   2 3 1   3 1 1   4 2 1   4 5 1   5 8 1   5 7 1   6 4 1   6 5 1   7 6 1   8 4 1";
 		Scanner in;
 		// If there is a command line argument, use it as file from which
 		// input is read, otherwise use input from string.
