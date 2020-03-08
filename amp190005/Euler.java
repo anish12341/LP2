@@ -1,19 +1,3 @@
-/** Starter code for LP2
- *  @author rbk ver 1.0
- *  @author SA ver 1.1
- */
-
-// change to your netid
-package amp190005;
-
-import amp190005.Graph.Timer;
-import amp190005.Graph.*;
-import java.io.File;
-import java.util.*;
-import java.io.File;
-import java.util.*;
-
-
 /**
  * Euler (LP2)
  * This program finds a Euler path and its different
@@ -26,15 +10,19 @@ import java.util.*;
  * @version 1.0
  * @since 2020-03-08
  */
+
+package amp190005;
+import amp190005.Graph.Timer;
+import amp190005.Graph.*;
+import java.util.*;
+
 public class Euler extends GraphAlgorithm<Euler.EulerVertex> {
     static int VERBOSE = 1;
     int counter;
     Vertex start;
     List<Vertex> tour;
     static Graph globalGraph;
-    // int strongComponents = 0;
     List<Set<Vertex>> strongComponents;
-    // You need this if you want to store something at each node
     static class EulerVertex implements Factory {
         int state;
         Iterator<Edge> edgeIterator = null;
@@ -114,7 +102,6 @@ public class Euler extends GraphAlgorithm<Euler.EulerVertex> {
         }
 
         Stack<Vertex> stack = new Stack<>();
-        // Push the current source node
         stack.push(src);
 
         while (stack.empty() == false){
@@ -182,22 +169,12 @@ public class Euler extends GraphAlgorithm<Euler.EulerVertex> {
                 makeAllZero(g);
                 if(!dfs(vertexArray[0], reachabiListReverse, g.inEdges(vertexArray[0]), true))
                     return false;
-                /*System.out.println("Reachability of " + vertexArray[0].getName());
-                for (Vertex i: reachabiList) {
-                    System.out.print(i.getName() + " ");
-                }
-                System.out.println();
-                System.out.println("Reachability of " + vertexArray[0].getName() + " in reverse");
-                for (Vertex i: reachabiListReverse) {
-                    System.out.print(i.getName() + " ");
-                }*/
+
                 System.out.println();
                 reachableHashSet = convertToSet(reachabiList);
                 Set<Vertex> reachableReverseHashSet = convertToSet(reachabiListReverse);
                 reachableHashSet.retainAll(reachableReverseHashSet);
-                /*System.out.println("Common components of " + vertexArray[0].getName());*//*System.out.println("Common components of " + vertexArray[0].getName());*/
-                // putInComp(reachableHashSet);
-                // if (reachableHashSet.size() == 0) {
+
             } else {
                 reachableHashSet = convertToSet(reachabiList);
             }
@@ -212,8 +189,8 @@ public class Euler extends GraphAlgorithm<Euler.EulerVertex> {
 
     /**
      * This method converts list to set
-     * @param src is the source vertex,
-     * @return boolean returns if number of outgoing and incoming edges are same or not
+     * @param list is the list to be converted to set,
+     * @return HashSet converts list to set
      */
     public HashSet<Vertex> convertToSet(List<Vertex> list) {
         return new HashSet<Vertex>(list);
@@ -232,7 +209,6 @@ public class Euler extends GraphAlgorithm<Euler.EulerVertex> {
 
     /**
      * This method checks if the graph is strongly connected or not
-     * @param nothing
      * @return boolean returns if the graph is strongly connected or not
      */
     public boolean isStronglyConnected() {
@@ -245,7 +221,6 @@ public class Euler extends GraphAlgorithm<Euler.EulerVertex> {
 
     /**
      * This method checks if the graph is Eulerian or not
-     * @param nothing
      * @return boolean returns if the graph is Eulerian or not
      */
     public boolean isEulerian() {
@@ -263,7 +238,6 @@ public class Euler extends GraphAlgorithm<Euler.EulerVertex> {
 
     /**
      * This method finds Euler tour of the graph
-     * @param nothing
      * @return List returns list of euler tour
      */
     public List<Vertex> findEulerTour() {
@@ -274,14 +248,12 @@ public class Euler extends GraphAlgorithm<Euler.EulerVertex> {
             System.out.println("Capable of having euler tour");
             eulerAll();
         }
-        // Graph is Eulerian...find the tour and return tour
         return tour;
     }
 
 
     /**
      * This method checks if the graph is Eulerian or not
-     * @param nothing
      * @return nothing
      */
     public void eulerAll() {
@@ -320,16 +292,13 @@ public class Euler extends GraphAlgorithm<Euler.EulerVertex> {
                 counter+=1;
             }
         }
-
     }
 
     /**
      * This method prints the Euler tour
-     * @param nothing
      * @return nothing
      */
     public void printEulerTour() {
-        /*System.out.println("here");*/
         for (Vertex v: tour) {
             System.out.print(v + " ");
         }
@@ -354,18 +323,12 @@ public class Euler extends GraphAlgorithm<Euler.EulerVertex> {
      */
     public static void main(String[] args) throws Exception {
         Scanner in;
-        /*if (args.length == 1) {
-            System.out.println("I am here");
-            in = new Scanner(new File(args[0]));
-        } else if (args.length > 1) {
-            // in = new Scanner(System.in);
-            in = new Scanner(new File(args[0]));
+        if (args.length > 1) {
+            in = new Scanner(System.in);
         } else {
-            // String input = "9 13  1 2 1  2 3 1  3 1 1  3 4 1  4 5 1  5 6 1  6 3 1  4 7 1  7 8 1  8 4 1  5 7 1  7 9 1  9 5 1";
-            String input = "8 12  1 2 1  2 3 1  3 1 1  2 6 1  6 5 1  6 4 1  4 2 1  4 5 1  5 7 1  7 6 1  5 8 1  8 4 1";
+            String input = "9 13 1 2 1 2 3 1 3 1 1 3 4 1 4 5 1 5 6 1 6 3 1 4 7 1 7 8 1 8 4 1 5 7 1 7 9 1 9 5 1";
             in = new Scanner(input);
-        }*/
-        in = new Scanner(new File("C:\\Users\\Ishan\\IdeaProjects\\Implementation of DS and Algo\\LP2Git\\src\\ixs180019\\test4-cycles.txt")) ;
+        }
         int start = 1;
         if(args.length > 1) {
             start = Integer.parseInt(args[1]);
@@ -377,10 +340,8 @@ public class Euler extends GraphAlgorithm<Euler.EulerVertex> {
         Graph g = Graph.readDirectedGraph(in);
         Vertex startVertex = g.getVertex(start);
         Timer timer = new Timer();
-        g.printGraph(false);
 
         Euler euler = new Euler(g, startVertex);
-        euler.checkGraphIterator();
         List<Vertex> tour = euler.findEulerTour();
 
         System.out.println();
@@ -389,14 +350,13 @@ public class Euler extends GraphAlgorithm<Euler.EulerVertex> {
             System.out.println("Output:");
             euler.printEulerTour();
             System.out.println();
-            System.out.println("Edges visited:"+ euler.counter-1);
+            System.out.println("Edges visited:"+ (euler.counter-1));
         }
         System.out.println(timer);
-
-
     }
 
     public void setVerbose(int ver) {
         VERBOSE = ver;
     }
 }
+
