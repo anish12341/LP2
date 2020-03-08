@@ -2,7 +2,7 @@
  * Euler (LP2)
  * This program finds a Euler path and its different
  * operations like dfs(), dfsReverse(), isEdgesSame(), dfsAll(), convertToSet(), makeALlZero(),
- * isStronglyConnected(), isEulerian(), findEulerTour(), eulerAll(), eachEulerTour(), printEulerTour(), checkGraphIterator()
+ * isStronglyConnected(), isEulerian(), findEulerTour(), eachEulerTour(), printEulerTour(), checkGraphIterator()
  * @author Anish Patel      amp190005
  * @author Henil Doshi     hxd180025
  * @author Ishan Shah     ixs180019
