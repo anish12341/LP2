@@ -12,8 +12,10 @@
  */
 
 package amp190005;
+
 import amp190005.Graph.Timer;
 import amp190005.Graph.*;
+
 import java.util.*;
 
 public class Euler extends GraphAlgorithm<Euler.EulerVertex> {
@@ -225,7 +227,6 @@ public class Euler extends GraphAlgorithm<Euler.EulerVertex> {
      */
     public boolean isEulerian() {
         if (g.isDirected()) {
-            System.out.println("I am directed");
             if (isStronglyConnected()) {
                 return true;
             }
@@ -246,26 +247,13 @@ public class Euler extends GraphAlgorithm<Euler.EulerVertex> {
             return new LinkedList<Vertex>();
         } else {
             System.out.println("Capable of having euler tour");
-            eulerAll();
+            eachEulerTour(this.start);
         }
         return tour;
     }
 
-
     /**
-     * This method checks if the graph is Eulerian or not
-     * @return nothing
-     */
-    public void eulerAll() {
-        Vertex[] vertexArray = g.getVertexArray();
-        System.out.println("Start: " + this.start.getName());
-        eachEulerTour(this.start);
-
-    }
-
-
-    /**
-     * This method is the implmentation of the Euler tour
+     * This method is the implementation of the Euler tour
      * @param src, source vertex from where tour should start
      * @return nothing
      */
@@ -306,14 +294,6 @@ public class Euler extends GraphAlgorithm<Euler.EulerVertex> {
         tour = new LinkedList<>();
     }
 
-    public void checkGraphIterator() {
-        System.out.println("Checking");
-        Edge[] e = g.getEdgeArray();
-        for (Edge each : e) {
-            System.out.println(each.toString());
-        }
-
-    }
 
     /**
      * This is the main method that tests the Euler graph
@@ -326,8 +306,9 @@ public class Euler extends GraphAlgorithm<Euler.EulerVertex> {
         if (args.length > 1) {
             in = new Scanner(System.in);
         } else {
-            String input = "9 13 1 2 1 2 3 1 3 1 1 3 4 1 4 5 1 5 6 1 6 3 1 4 7 1 7 8 1 8 4 1 5 7 1 7 9 1 9 5 1";
+            String input = "9 12 1 2 1 2 3 1 3 1 1 3 4 1 4 5 1 5 6 1 6 3 1 4 7 1 7 8 1 8 4 1 5 7 1 7 9 1";
             in = new Scanner(input);
+
         }
         int start = 1;
         if(args.length > 1) {
@@ -340,17 +321,16 @@ public class Euler extends GraphAlgorithm<Euler.EulerVertex> {
         Graph g = Graph.readDirectedGraph(in);
         Vertex startVertex = g.getVertex(start);
         Timer timer = new Timer();
-
         Euler euler = new Euler(g, startVertex);
-        List<Vertex> tour = euler.findEulerTour();
 
-        System.out.println();
         timer.end();
         if(VERBOSE > 0) {
             System.out.println("Output:");
+            List<Vertex> tour = euler.findEulerTour();
             euler.printEulerTour();
             System.out.println();
-            System.out.println("Edges visited:"+ (euler.counter-1));
+            //Uncomment line below to see number of edges visited
+            /*System.out.println("Edges visited:"+ (euler.counter-1));*/
         }
         System.out.println(timer);
     }
@@ -359,4 +339,3 @@ public class Euler extends GraphAlgorithm<Euler.EulerVertex> {
         VERBOSE = ver;
     }
 }
-
